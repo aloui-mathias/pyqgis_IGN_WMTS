@@ -1,8 +1,7 @@
 import pyproj
 
 # Convert coordinates from one EPSG to another
-def convert_coord(x : float, y : float, input_epsg : int,
-    output_epsg : int):
+def convert_coord(x: float, y: float, input_epsg: int, output_epsg: int):
 
     # Create the input and output crs
     input_crs = pyproj.CRS.from_epsg(input_epsg)
@@ -26,15 +25,8 @@ def convert_coord(x : float, y : float, input_epsg : int,
         return coord[0], coord[1]
 
 
-def convert_to_IGN(x : float, y : float,
-    input_epsg : int):
-
+def convert_to_IGN(x: float, y: float, input_epsg: int):
     return convert_coord(x, y, input_epsg, 3857)
 
-def convert_from_IGN(x : float, y : float,
-    output_epsg : int):
-
+def convert_from_IGN(x: float, y: float, output_epsg: int):
     return convert_coord(x, y, 3857, output_epsg)
-
-
-

@@ -12,9 +12,10 @@ import functions_coordinates
 import typing
 
 
-def main(xmin, ymin, xmax, ymax, input_epsg : typing.Optional[int] = None,
-    display=False, name : typing.Optional[str] = "tile",
-    resolution : typing.Optional[float] = 0.2):
+def main(xmin: float, ymin: float, xmax: float, ymax: float,
+    input_epsg: typing.Optional[int] = None, display = False,
+    name: typing.Optional[str] = "tile",
+    resolution: typing.Optional[float] = 0.2):
 
     # Convert the coordinates if not in EPSG:3857
     if input_epsg is not None and input_epsg is not 3857:
@@ -106,50 +107,50 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "xmin",
-        help="latitude or abscissa value of the bottom left corner",
-        type=float
+        help = "latitude or abscissa value of the bottom left corner",
+        type = float
     )
     parser.add_argument(
         "ymin",
-        help="longitude or ordinate value of the bottom left corner",
-        type=float
+        help = "longitude or ordinate value of the bottom left corner",
+        type = float
     )
     parser.add_argument(
         "xmax",
-        help="latitude or abscissa value of the top right corner",
-        type=float
+        help = "latitude or abscissa value of the top right corner",
+        type = float
     )
     parser.add_argument(
         "ymax",
-        help="longitude or ordinate value of the top right corner",
-        type=float
+        help = "longitude or ordinate value of the top right corner",
+        type = float
     )
     parser.add_argument(
         "--epsg",
-        help="use to specify the espg system of the coordinates",
-        type=int
+        help = "use to specify the espg system of the coordinates",
+        type = int
     )
     parser.add_argument(
         "--resolution",
-        help="use to specify a resolution in meters per pixel (default 0.2)",
-        type=float,
-        default=0.2
+        help = "use to specify a resolution in meters per pixel (default 0.2)",
+        type = float,
+        default = 0.2
     )
     parser.add_argument(
         "--time",
-        help="use to print the execution time",
-        action="store_true"
+        help = "use to print the execution time",
+        action = "store_true"
     )
     parser.add_argument(
         "--display",
-        help="use to display the generated tif file",
-        action="store_true"
+        help = "use to display the generated tif file",
+        action = "store_true"
     )
     parser.add_argument(
         "--path",
-        help="use to specify the path for the output tif file without the extension .tif",
-        type=str,
-        default="tile"
+        help = "use to specify the path for the output tif file without the extension .tif",
+        type = str,
+        default = "tile"
     )
     args = parser.parse_args()
 
