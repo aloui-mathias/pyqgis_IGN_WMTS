@@ -13,30 +13,43 @@ import typing
 
 
 def main(xmin, ymin, xmax, ymax, input_epsg : typing.Optional[int] = None,
-    geodetic=False, display=False, name : typing.Optional[str] = None):
+    display=False, name : typing.Optional[str] = None,
+    resolution : typing.Optional[float] = None):
 
+
+    # Set a default name for the output
     if name is None:
         name = "tile"
 
-    in_epsg = input_epsg if input_epsg is not None else 3857
+    #Set a default resolution in meters per pixel
+    if resolution is None:
+        resolution = 0.2
 
-    xmin, ymin = functions_coordinates.convert_to_IGN(
-        xmin, ymin, in_epsg)
-    xmax, ymax = functions_coordinates.convert_to_IGN(
-        xmax, ymax, in_epsg)
+    # Convert the coordinates if not in EPSG:3857
+    if input_epsg is not None and input_epsg is not 3857:
+        xmin, ymin = functions_coordinates.convert_to_IGN(
+            xmin, ymin, in_epsg)
+        xmax, ymax = functions_coordinates.convert_to_IGN(
+            xmax, ymax, in_epsg)
 
+    # Launch a Qgis app
     QGS = qgis.core.QgsApplication([], False)
     QGS.initQgis()
 
+    # Set the extent of the wanted image
     extent = qgis.core.QgsRectangle(xmin, ymin, xmax, ymax)
 
+    # The url for the free and without account access to the IGN WMTS server
     WMTS_URL_GETCAP = "https://wxs.ign.fr/pratique/geoportail/wmts?SERVICE%3D"\
         "WMTS%26REQUEST%3DGetCapabilities"
     WMTS = owslib.wmts.WebMapTileService(WMTS_URL_GETCAP)
+
+    # The name of the satellite image
     LAYER_NAME = "ORTHOIMAGERY.ORTHOPHOTOS"
     WMTS_LAYER = WMTS[LAYER_NAME]
     LAYER_TITLE = WMTS_LAYER.title
 
+    # Set the parameters for the WMTS request
     WMTS_URL_PARAMS = {
         "SERVICE": "WMTS",
         "VERSION": "1.0.0",
@@ -47,29 +60,32 @@ def main(xmin, ymin, xmax, ymax, input_epsg : typing.Optional[int] = None,
         "styles": "normal",
         "tileMatrixSet": "PM",
         "tileMatrix": "21",
-        "url": WMTS_URL_GETCAP,
-        "dpiMode": "8"
+        "url": WMTS_URL_GETCAP
     }
 
+    # Parse these parameters
     WMTS_URL_FINAL = urllib.parse.unquote(urllib.parse.urlencode(WMTS_URL_PARAMS))
 
+    # Check if the layer is still available
     WMTS_LAYER = qgis.core.QgsRasterLayer(WMTS_URL_FINAL, "raster-layer", "wms")
     if WMTS_LAYER.isValid():
         qgis.core.QgsProject.instance().addMapLayer(WMTS_LAYER)
     else:
         print(qgis_wmts_layer_manual.error().message())
 
-    layer = qgis.core.QgsProject.instance().mapLayersByName("raster-layer")[0]
+    # Change the extent of the layer
+    WMTS_LAYER.setExtent(extent)
 
-    layer.setExtent(extent)
-
+    # Create the settings for the rederer
     settings = qgis.core.QgsMapSettings()
-    settings.setLayers([layer])
+    settings.setLayers([WMTS_LAYER])
+    # Default backgroud is black
     settings.setBackgroundColor(qgis.PyQt.QtGui.QColor(255, 255, 255))
-    settings.setOutputSize(qgis.PyQt.QtCore.QSize(extent.width()*5, extent.height()*5))
-    settings.setExtent(layer.extent())
-    settings.setOutputDpi(8)
+    # The size of the image is the wanted extent divided by the resoltion in meters per pixel
+    settings.setOutputSize(qgis.PyQt.QtCore.QSize(extent.width()/resolution, extent.height()/resolution))
+    settings.setExtent(WMTS_LAYER.extent())
     
+    # Reder the image
     render = qgis.core.QgsMapRendererParallelJob(settings)
 
     def finished():
@@ -84,8 +100,10 @@ def main(xmin, ymin, xmax, ymax, input_epsg : typing.Optional[int] = None,
     render.finished.connect(loop.quit)
     loop.exec_()
     
+    # Exit the Qgis app
     QGS.exitQgis()
 
+    # Display the result image if needed
     if display:
         img_file = name + '.tif'
         img = rasterio.open(img_file)
@@ -121,9 +139,9 @@ if __name__ == "__main__":
         type=int
     )
     parser.add_argument(
-        "--geodetic",
-        help="use if the coordinates are in geodetic projection",
-        action="store_true"
+        "--resolution",
+        help="use to specify a resolution in meters per pixel (default 0.2)",
+        type=float
     )
     parser.add_argument(
         "--time",
@@ -143,7 +161,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     start = time.time()
-    main(args.xmin, args.ymin, args.xmax, args.ymax, args.epsg, args.geodetic, args.display, args.path)
+    main(args.xmin, args.ymin, args.xmax, args.ymax, args.epsg, args.display, args.path, args.resolution)
     end = time.time()
     duration = end - start
     if args.time:
