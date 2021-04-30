@@ -1,2 +1,5 @@
 # pyqgis_wmts
-A small script using pyqgis to load a tile from a WMTS server
+
+A small script using pyqgis to load a tile from a WMTS server.
+
+Here I load an image with maximum resoltuion of the ORTHIMAGERY from the IGN WMTS server.
