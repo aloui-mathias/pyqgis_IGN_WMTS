@@ -1,4 +1,4 @@
-# pyqgis_wmts
+# pyqgis_IGN_WMTS
 
 A small script using pyqgis to load a tile from a WMTS server.
 
