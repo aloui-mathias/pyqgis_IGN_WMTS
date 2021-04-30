@@ -13,17 +13,8 @@ import typing
 
 
 def main(xmin, ymin, xmax, ymax, input_epsg : typing.Optional[int] = None,
-    display=False, name : typing.Optional[str] = None,
-    resolution : typing.Optional[float] = None):
-
-
-    # Set a default name for the output
-    if name is None:
-        name = "tile"
-
-    #Set a default resolution in meters per pixel
-    if resolution is None:
-        resolution = 0.2
+    display=False, name : typing.Optional[str] = "tile",
+    resolution : typing.Optional[float] = 0.2):
 
     # Convert the coordinates if not in EPSG:3857
     if input_epsg is not None and input_epsg is not 3857:
@@ -141,7 +132,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--resolution",
         help="use to specify a resolution in meters per pixel (default 0.2)",
-        type=float
+        type=float,
+        default=0.2
     )
     parser.add_argument(
         "--time",
@@ -156,7 +148,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--path",
         help="use to specify the path for the output tif file without the extension .tif",
-        type=str
+        type=str,
+        default="tile"
     )
     args = parser.parse_args()
 
