@@ -13,9 +13,10 @@ import typing
 
 
 def main(xmin: float, ymin: float, xmax: float, ymax: float,
-    input_epsg: typing.Optional[int] = None, display = False,
-    name: typing.Optional[str] = "tile",
-    resolution: typing.Optional[float] = 0.2):
+         input_epsg: typing.Optional[int] = None,
+         display: typing.Optional[bool] = False,
+         name: typing.Optional[str] = "tile",
+         resolution: typing.Optional[float] = 0.2):
 
     # Convert the coordinates if not in EPSG:3857
     if input_epsg is not None and input_epsg is not 3857:
@@ -74,7 +75,9 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     # Default backgroud is black
     settings.setBackgroundColor(qgis.PyQt.QtGui.QColor(255, 255, 255))
     # The size of the image is the wanted extent divided by the resoltion in meters per pixel
-    settings.setOutputSize(qgis.PyQt.QtCore.QSize(extent.width()/resolution, extent.height()/resolution))
+    settings.setOutputSize(
+        qgis.PyQt.QtCore.QSize(
+            extent.width()/resolution, extent.height()/resolution))
     settings.setExtent(WMTS_LAYER.extent())
     
     # Reder the image
