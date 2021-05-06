@@ -21,9 +21,9 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     # Convert the coordinates if not in EPSG:3857
     if input_epsg is not None and input_epsg is not 3857:
         xmin, ymin = functions_coordinates.convert_to_IGN(
-            xmin, ymin, in_epsg)
+            xmin, ymin, input_epsg)
         xmax, ymax = functions_coordinates.convert_to_IGN(
-            xmax, ymax, in_epsg)
+            xmax, ymax, input_epsg)
 
     # Launch a Qgis app
     QGS = qgis.core.QgsApplication([], False)
