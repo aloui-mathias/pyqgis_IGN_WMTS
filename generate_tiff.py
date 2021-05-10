@@ -1,5 +1,4 @@
 import qgis.core
-import qgis.gui
 import qgis.PyQt.QtCore
 import qgis.PyQt.QtGui
 import urllib
@@ -63,9 +62,10 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     # Check if the layer is still available
     WMTS_LAYER = qgis.core.QgsRasterLayer(
         WMTS_URL_FINAL, "raster-layer", "wms")
-    if not WMTS_LAYER.isValid():
-        print(WMTS_LAYER.error().message())
-        exit()
+    if WMTS_LAYER.isValid():
+        qgis.core.QgsProject.instance().addMapLayer(WMTS_LAYER)
+    else:
+        print(qgis_wmts_layer_manual.error().message())
 
     # Change the extent of the layer
     WMTS_LAYER.setExtent(extent)
@@ -73,10 +73,8 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     # Create the settings for the rederer
     settings = qgis.core.QgsMapSettings()
     settings.setLayers([WMTS_LAYER])
-
     # Default backgroud is black
     settings.setBackgroundColor(qgis.PyQt.QtGui.QColor(255, 255, 255))
-
     # The size of the image is the wanted extent divided by the resoltion in
     # meters per pixel
     settings.setOutputSize(
