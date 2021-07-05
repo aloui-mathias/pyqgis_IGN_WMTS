@@ -65,7 +65,7 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     if WMTS_LAYER.isValid():
         qgis.core.QgsProject.instance().addMapLayer(WMTS_LAYER)
     else:
-        print(qgis_wmts_layer_manual.error().message())
+        print("Layer not available or wrong request")
 
     # Change the extent of the layer
     WMTS_LAYER.setExtent(extent)
