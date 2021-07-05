@@ -1,4 +1,4 @@
-# IGN ORTHOIMAGERY acces with QGIS
+# IGN ORTHOIMAGERY access with QGIS
 
 A small script to download an image from the ORTHOIMAGERY database of the IGN (Institut national de l'information géographique et forestière).
 
