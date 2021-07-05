@@ -15,10 +15,10 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
          input_epsg: typing.Optional[int] = None,
          display: typing.Optional[bool] = False,
          name: typing.Optional[str] = "tile",
-         resolution: typing.Optional[float] = 0.2):
+         resolution: typing.Optional[float] = 0.25):
 
     # Convert the coordinates if not in EPSG:3857
-    if input_epsg is not None and input_epsg is not 3857:
+    if input_epsg != None and input_epsg != 3857:
         xmin, ymin = functions_coordinates.convert_to_IGN(
             xmin, ymin, input_epsg)
         xmax, ymax = functions_coordinates.convert_to_IGN(
@@ -79,7 +79,10 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     # meters per pixel
     settings.setOutputSize(
         qgis.PyQt.QtCore.QSize(
-            extent.width() / resolution, extent.height() / resolution))
+            (int)(extent.width() / resolution),
+            (int)(extent.height() / resolution)
+        )
+    )
     settings.setExtent(WMTS_LAYER.extent())
 
     # Reder the image
@@ -137,9 +140,9 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--resolution",
-        help="use to specify a resolution in meters per pixel (default 0.2)",
+        help="use to specify a resolution in meters per pixel (default 0.25)",
         type=float,
-        default=0.2
+        default=0.25
     )
     parser.add_argument(
         "--time",
