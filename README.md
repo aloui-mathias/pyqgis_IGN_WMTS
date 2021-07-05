@@ -33,4 +33,5 @@ Result (from --display option):
 
 This script use the free open key "pratique" from the IGN and is only meant for tests and developpement.
 If you to use IGN data in production, create your own private key here (french form): https://www.sphinxonline.com/surveyserver/s/etudesmk/Geoservices_2021/questionnaire.htm#49
+
 And then change in the code the variable "WMTS_URL_GETCAP" by replacing "pratique" by your own key.
