@@ -32,8 +32,8 @@ def main(xmin: float, ymin: float, xmax: float, ymax: float,
     extent = qgis.core.QgsRectangle(xmin, ymin, xmax, ymax)
 
     # The url for the free and without account access to the IGN WMTS server
-    WMTS_URL_GETCAP = "https://wxs.ign.fr/pratique/geoportail/wmts?SERVICE%3D"\
-        "WMTS%26REQUEST%3DGetCapabilities"
+    WMTS_URL_GETCAP = "https://wxs.ign.fr/decouverte/geoportail/wmts?"\
+        "SERVICE=WMTS&REQUEST=GetCapabilities"
     WMTS = owslib.wmts.WebMapTileService(WMTS_URL_GETCAP)
 
     # The name of the satellite image
